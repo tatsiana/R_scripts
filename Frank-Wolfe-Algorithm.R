@@ -15,7 +15,7 @@ require(rgenoud)
 ## tol - tolerance level for stopping rule
 ## A - matrix of coefficients of constrains '<=' 
 ## b - vector of left hand side of the constrains '<='
-## returns vector of x1,x2 - optimal solution
+## matrix of intermediate solutions, matrix of intermediate values, and optimal solutions
 
 FW = function(fbs,f,df1,df2, tol,A,b){
   
