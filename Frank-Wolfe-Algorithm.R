@@ -16,6 +16,7 @@ require(rgenoud)
 ## A - matrix of coefficients of constrains '<=' 
 ## b - vector of left hand side of the constrains '<='
 ## returns vector of x1,x2 - optimal solution
+
 FW = function(fbs,f,df1,df2, tol,A,b){
   
    
