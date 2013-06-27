@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Template &middot; Bootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+        font: 10px sans-serif;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 960px;
+
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: left;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+        color: #fff;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+#states {
+  fill: none;
+}
+
+#states .active {
+  fill: orange;
+}
+
+#state-borders {
+  fill: none;
+  stroke: brown;
+  stroke-width: 1px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+#counties {
+  fill: #F7EFCD;
+}
+
+
+#county-borders {
+  fill: none;
+  stroke: black;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+#treeMap{float:left; }
+
+.q0-9 { fill:rgb(252,228,129); }
+.q1-9 { fill:rgb(249,217,83); }
+.q2-9 { fill:rgb(249,204,18); }
+.q3-9 { fill:rgb(252,190,16); }
+.q4-9 { fill:rgb(255,180,0); }
+.q5-9 { fill:rgb(255,160,0); }
+.q6-9 { fill:rgb(249,118,0); }
+.q7-9 { fill:rgb(255,91,0); }
+.q8-9 { fill:rgb(217,67,43); }
+
+.node {
+  border: solid 1px white;
+  font: 10px sans-serif;
+  line-height: 12px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+  color: black;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display:none;
+}
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="bootstrap/ico/favicon.png">
+   <!-- FThis is the script for the map -->
+
+  </head>
+
+  <body>
+
+    <div class="span12">
+
+      
+
+      <div class="jumbotron">
+        <h1>FireFinder</h1>
+        <p class="lead white">Find the frequency of fires in your area with this interactive map.</p>
+      </div>
+
+   
+
+      <div id="mapArea">
+       
+      </div>
+
+      <hr>
+
+      <div id="zipArea"
+        <h4 class="white">Enter up to 4 zip codes to find detailed fire data.</h4>
+        <p class="white">(Separate zip codes with a comma)</p>
+        <div class="input-append">
+          <input class="span2" id="appendedInputButton" type="text">
+          <a href = "zip.html">
+            <button class="btn" type="button">Go!</button>
+          </a>
+        <div>
+          
+
+        </div>
+        </div>
+      </div>
+
+      <hr>
+
+     <div class="row-fluid marketing">
+        <div class="span6 white">
+          <h4>What browsers are supported?</h4>
+          <p>This web app uses svg images which are supported in Firefox, Internet Explorer (IE 9+), Opera, Safari and Google Chrome.</p>
+
+          <h4>Where can I find more information?</h4>
+          <p>Check out these links from FEMA to educate yourself on fire prevention and safety:</p>
+          <a href="http://www.usfa.fema.gov/">http://www.usfa.fema.gov/</a><br>
+          <a href="http://www.ready.gov/fires">http://www.ready.gov/fires</a>
+
+          
+          <!--<h4>Faq</h4>
+          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        -->
+        </div>
+
+        <div class="span6 white">
+          <h4>Who made this?</h4>
+          <p>A few members from the Accenture Tecnology Labs were inspired by the National Day of Civic Hacking. We harnessed our data skills and interactive visualization abilities to give back to our community.</p>
+
+          
+          <h4>How up-to-date is this information?</h4>
+          <p>This data is from 2011.</p>
+
+          <!--
+          <h4>Faq</h4>
+          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+          -->
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; Accenture 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/js/bootstrap-button.js"></script>
+    <script src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="USmap.js"></script>
+  </body>
+</html>
