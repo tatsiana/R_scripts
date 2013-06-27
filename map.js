@@ -1,77 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>D3: Linear scales with a scatterplot</title>
-        <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-        <style type="text/css">
-            /* No style rules here yet */       
-        </style>
-    </head>
-    <body>
-        <script type="text/javascript">
-  
-            //Width and height
-            var w = 500;
-            var h = 100;
-            var padding = 20;
-            var dataset = [
-                            [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
-                            [410, 12], [475, 44], [25, 67], [85, 21], [220, 88],
-                            [600,150]
-                          ];
 
-            //Create scale functions
-            var xScale = d3.scale.linear()
-                                 .domain([0, d3.max(dataset, function(d) { return d[0]; })])
-                                 .range([padding, w - padding * 2])
-                                 .nice();
+var width = 960,
+    height = 500,
+    centered;
 
-            var yScale = d3.scale.linear()
-                                 .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-                                 .range([h - padding, padding]);
+var projection = d3.geo.albersUsa()
+    .scale(1070)
+    .translate([width / 2, height / 2]);
 
-            var rScale = d3.scale.linear()
-                     .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-                     .range([2, 5])
-                     .nice();
-    
-            //Create SVG element
-            var svg = d3.select("body")
-                        .append("svg")
-                        .attr("width", w)
-                        .attr("height", h);
+var rateById = d3.map();
 
-            svg.selectAll("circle")
-               .data(dataset)
-               .enter()
-               .append("circle")
-               .attr("cx", function(d) {
-                    return xScale(d[0]);
-               })
-               .attr("cy", function(d) {
-                    return yScale(d[1]);
-               })
-               .attr("r", function(d) {
-                    return rScale(d[1]);
-               });
-            svg.selectAll("text")
-               .data(dataset)
-               .enter()
-               .append("text")
-               .text(function(d) {
-                    return d[0] + "," + d[1];
-               })
-               .attr("x", function(d) {
-                    return xScale(d[0]);
-               })
-               .attr("y", function(d) {
-                    return yScale(d[1]);
-               })
-               .attr("font-family", "sans-serif")
-               .attr("font-size", "11px")
-               .attr("fill", "red");
-            
-        </script>
-    </body>
-</html>
+function quantizeTest (num) {
+    if(num < 21){return "q0-9";}
+    else if(20< num && num< 37){return "q1-9";}
+    else if(36< num && num< 51){return "q2-9";}
+    else if(50< num && num< 86){return "q3-9";}
+    else if(85< num && num< 116){return "q4-9";}
+    else if(115< num && num< 161){return "q5-9";}
+    else if(161< num && num< 241){return "q6-9";}
+    else if(240< num && num< 391){return "q7-9";}
+    else if(390< num){return "q8-9";}
+    };
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select("body").select("#mapArea").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height)
+    .on("click", clicked);
+    var g = svg.append("g");
+  queue()
+    .defer(d3.json, "us.json")
+    .defer(d3.csv, "total_data_by_county.csv", function(d) { rateById.set(d.id, +d.rate); })
+    .await(ready);
+
+function ready(error,us){
+g.append("g")
+    .attr("id", "counties")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.counties).features)
+    .enter().append("path")
+    .attr("class", function (d) {
+		return quantizeTest(rateById.get(d.id));
+    })
+    .attr("d", path);
+
+g.append("g")
+    .attr("id", "states")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.states).features)
+    .enter().append("path")
+	.style("fill", "1e-6")
+    //.style("fill-opacity", "1e-6")
+    .attr("d", path)
+	.on("click", clicked);
+
+g.append("path")
+    .datum(topojson.mesh(us, us.objects.counties, function (a, b) {
+        return a !== b;
+    }))
+    .attr("id", "county-borders")
+    .attr("d", path);
+
+g.append("path")
+    .datum(topojson.mesh(us, us.objects.states, function (a, b) {
+        return a !== b;
+    }))
+    .attr("id", "state-borders")
+    .attr("d", path);
+  }
+	
+function clicked(d) {
+    var x, y, k;
+
+    if (d && centered !== d) {
+        var centroid = path.centroid(d);
+        x = centroid[0];
+        y = centroid[1];
+        k = 4;
+        centered = d;
+    } else {
+        x = width / 2;
+        y = height / 2;
+        k = 1;
+        centered = null;
+    }
+    g.selectAll("path")
+        .classed("active", centered && function (d) {
+            return d === centered;
+        });
+
+    g.transition()
+        .duration(750)
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+        .style("stroke-width", 1.5 / k + "px");
+}
